@@ -452,11 +452,24 @@
   <p>© 2026 Sidecar. All rights reserved.</p>
 </footer>
 
-  <script src="https://7071-70-180-92-98.ngrok-free.app/voice-widget.js"></script>
+<!-- Test Page - Voice Agent Widget -->
+<script>
+  fetch('https://7071-70-180-92-98.ngrok-free.app/voice-widget.js', {
+    headers: { 'ngrok-skip-browser-warning': 'true' }
+  })
+  .then(r => r.text())
+  .then(js => {
+    const s = document.createElement('script');
+    s.textContent = js;
+    document.head.appendChild(s);
+  })
+  .catch(err => console.error('Failed to load voice widget:', err));
+</script>
 <voice-agent
   deployment-id="646E8D42-4290-4660-B03F-7319BC70598F"
   api-url="https://7071-70-180-92-98.ngrok-free.app">
 </voice-agent>
+
 
 <script>
   // Page navigation
