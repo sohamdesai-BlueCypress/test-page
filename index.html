@@ -1,16 +1,494 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Voice Widget Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sidecar | Your AI Learning Journey Starts Here</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --primary: #6C3CE1;
+    --primary-dark: #5228B5;
+    --accent: #FF6B35;
+    --dark: #0F0A1E;
+    --light: #F8F6FF;
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.1);
+  }
+  body { font-family:'Inter',sans-serif; background:var(--dark); color:#fff; overflow-x:hidden; }
+  a { text-decoration:none; color:inherit; }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:1rem 2rem;
+    backdrop-filter:blur(20px);
+    background:rgba(15,10,30,0.7);
+    border-bottom:1px solid var(--glass-border);
+    display:flex; justify-content:space-between; align-items:center;
+    transition: all 0.3s ease;
+  }
+  .logo {
+    font-size:1.6rem; font-weight:800;
+    background:linear-gradient(135deg,#fff,var(--accent));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    letter-spacing:-0.5px;
+  }
+  .logo span { font-weight:400; opacity:0.7; }
+  .nav-links { display:flex; gap:2rem; align-items:center; }
+  .nav-links a {
+    font-size:0.9rem; font-weight:500; opacity:0.8;
+    transition:all 0.3s; position:relative; cursor:pointer;
+  }
+  .nav-links a:hover, .nav-links a.active { opacity:1; color:var(--accent); }
+  .nav-links a.active::after {
+    content:''; position:absolute; bottom:-6px; left:0; right:0;
+    height:2px; background:var(--accent); border-radius:2px;
+  }
+  .nav-cta {
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    padding:0.6rem 1.4rem; border-radius:50px; font-weight:600;
+    font-size:0.85rem; opacity:1!important; transition:transform 0.3s, box-shadow 0.3s!important;
+  }
+  .nav-cta:hover { transform:scale(1.05); box-shadow:0 4px 25px rgba(108,60,225,0.4); }
+
+  /* PAGE CONTAINER */
+  .page { display:none; animation:fadeIn 0.5s ease; }
+  .page.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* HERO */
+  .hero {
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center; padding:8rem 2rem 4rem; position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; top:-30%; left:50%; transform:translateX(-50%);
+    width:800px; height:800px; border-radius:50%;
+    background:radial-gradient(circle, rgba(108,60,225,0.3) 0%, transparent 70%);
+    filter:blur(80px); pointer-events:none;
+  }
+  .hero::after {
+    content:''; position:absolute; bottom:-10%; right:-10%;
+    width:500px; height:500px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%);
+    filter:blur(60px); pointer-events:none;
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:0.5rem;
+    padding:0.5rem 1.2rem; border-radius:50px;
+    background:var(--glass); border:1px solid var(--glass-border);
+    font-size:0.8rem; font-weight:500; margin-bottom:2rem;
+    animation:float 3s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .hero-badge .dot { width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .hero h1 {
+    font-size:clamp(2.5rem,6vw,4.5rem); font-weight:900; line-height:1.1;
+    margin-bottom:1.5rem; position:relative; z-index:1;
+    background:linear-gradient(135deg,#fff 0%,#c4b5fd 50%,var(--accent) 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-size:200% 200%; animation:gradientShift 5s ease infinite;
+  }
+  @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+  .hero p { font-size:1.15rem; max-width:600px; opacity:0.7; line-height:1.7; margin-bottom:2.5rem; position:relative;z-index:1; }
+  .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; position:relative;z-index:1; }
+  .btn {
+    padding:0.9rem 2rem; border-radius:50px; font-weight:600; font-size:0.95rem;
+    cursor:pointer; border:none; transition:all 0.3s;
+  }
+  .btn-primary {
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:#fff; box-shadow:0 4px 30px rgba(108,60,225,0.3);
+  }
+  .btn-primary:hover { transform:translateY(-3px); box-shadow:0 8px 40px rgba(108,60,225,0.5); }
+  .btn-outline {
+    background:transparent; color:#fff;
+    border:1.5px solid var(--glass-border);
+  }
+  .btn-outline:hover { background:var(--glass); border-color:rgba(255,255,255,0.25); transform:translateY(-3px); }
+
+  /* STATS */
+  .stats {
+    display:flex; justify-content:center; gap:3rem; padding:3rem 2rem;
+    flex-wrap:wrap; position:relative; z-index:1;
+  }
+  .stat {
+    text-align:center; padding:2rem; border-radius:20px;
+    background:var(--glass); border:1px solid var(--glass-border);
+    min-width:180px; transition:all 0.3s;
+  }
+  .stat:hover { transform:translateY(-5px); border-color:var(--primary); box-shadow:0 8px 30px rgba(108,60,225,0.15); }
+  .stat h3 {
+    font-size:2.5rem; font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--primary));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .stat p { font-size:0.85rem; opacity:0.6; margin-top:0.3rem; font-weight:500; }
+
+  /* SECTIONS */
+  section { padding:5rem 2rem; max-width:1100px; margin:0 auto; }
+  .section-title {
+    font-size:clamp(1.8rem,4vw,2.8rem); font-weight:800; text-align:center;
+    margin-bottom:1rem;
+  }
+  .section-sub { text-align:center; opacity:0.6; max-width:600px; margin:0 auto 3rem; line-height:1.7; }
+
+  /* CARDS */
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; }
+  .card {
+    background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:20px; padding:2rem; transition:all 0.4s; position:relative; overflow:hidden;
+  }
+  .card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    transform:scaleX(0); transition:transform 0.4s; transform-origin:left;
+  }
+  .card:hover { transform:translateY(-8px); border-color:var(--primary); }
+  .card:hover::before { transform:scaleX(1); }
+  .card-icon {
+    width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    font-size:1.5rem; margin-bottom:1.2rem;
+    background:linear-gradient(135deg,rgba(108,60,225,0.2),rgba(255,107,53,0.1));
+  }
+  .card h4 { font-size:1.15rem; font-weight:700; margin-bottom:0.6rem; }
+  .card p { font-size:0.88rem; opacity:0.6; line-height:1.6; }
+
+  /* TESTIMONIALS */
+  .testimonials { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+  .testimonial {
+    background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:20px; padding:2rem; position:relative;
+    transition:all 0.3s;
+  }
+  .testimonial:hover { border-color:var(--accent); transform:translateY(-4px); }
+  .testimonial .quote { font-size:0.9rem; line-height:1.7; opacity:0.8; font-style:italic; margin-bottom:1.2rem; }
+  .testimonial .author { display:flex; align-items:center; gap:0.8rem; }
+  .testimonial .avatar {
+    width:42px; height:42px; border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:0.9rem;
+  }
+  .testimonial .name { font-weight:700; font-size:0.9rem; }
+  .testimonial .role { font-size:0.75rem; opacity:0.5; }
+
+  /* CTA SECTION */
+  .cta-section {
+    text-align:center; padding:5rem 2rem;
+    background:linear-gradient(135deg,rgba(108,60,225,0.1),rgba(255,107,53,0.05));
+    border-radius:30px; margin:3rem auto; max-width:900px;
+    border:1px solid var(--glass-border);
+  }
+  .cta-section h2 { font-size:2.2rem; font-weight:800; margin-bottom:1rem; }
+  .cta-section p { opacity:0.6; margin-bottom:2rem; max-width:500px; margin-left:auto; margin-right:auto; line-height:1.7; }
+
+  /* ABOUT PAGE */
+  .about-hero {
+    min-height:60vh; display:flex; flex-direction:column; justify-content:center;
+    align-items:center; text-align:center; padding:10rem 2rem 4rem; position:relative;
+  }
+  .about-hero::before {
+    content:''; position:absolute; top:-20%; right:-10%;
+    width:600px; height:600px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,107,53,0.2) 0%, transparent 70%);
+    filter:blur(80px); pointer-events:none;
+  }
+  .about-hero h1 {
+    font-size:clamp(2.2rem,5vw,3.5rem); font-weight:900; margin-bottom:1.5rem;
+    background:linear-gradient(135deg,#fff,var(--accent));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .about-hero p { max-width:650px; opacity:0.7; line-height:1.8; font-size:1.05rem; }
+
+  .about-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; margin-top:3rem; }
+  .about-card {
+    background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:24px; padding:2.5rem; text-align:center; transition:all 0.4s;
+  }
+  .about-card:hover { transform:translateY(-6px); border-color:var(--primary); }
+  .about-card .icon { font-size:2.5rem; margin-bottom:1rem; }
+  .about-card h3 { font-size:1.2rem; font-weight:700; margin-bottom:0.8rem; }
+  .about-card p { font-size:0.88rem; opacity:0.6; line-height:1.7; }
+
+  .timeline { max-width:700px; margin:3rem auto; position:relative; padding-left:3rem; }
+  .timeline::before {
+    content:''; position:absolute; left:12px; top:0; bottom:0;
+    width:2px; background:linear-gradient(180deg,var(--primary),var(--accent));
+  }
+  .timeline-item { margin-bottom:2.5rem; position:relative; }
+  .timeline-item::before {
+    content:''; position:absolute; left:-27px; top:5px;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--accent); border:3px solid var(--dark);
+    box-shadow:0 0 15px rgba(255,107,53,0.4);
+  }
+  .timeline-item h4 { font-weight:700; font-size:1.05rem; margin-bottom:0.4rem; }
+  .timeline-item p { font-size:0.88rem; opacity:0.6; line-height:1.6; }
+
+  /* FOOTER */
+  footer {
+    padding:3rem 2rem; text-align:center;
+    border-top:1px solid var(--glass-border);
+    margin-top:3rem;
+  }
+  footer p { opacity:0.4; font-size:0.8rem; }
+  .footer-links { display:flex; justify-content:center; gap:2rem; margin-bottom:1rem; flex-wrap:wrap; }
+  .footer-links a { font-size:0.85rem; opacity:0.5; transition:all 0.3s; }
+  .footer-links a:hover { opacity:1; color:var(--accent); }
+
+  /* PARTICLES */
+  .particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+  .particle {
+    position:absolute; border-radius:50%; background:rgba(108,60,225,0.15);
+    animation:drift linear infinite;
+  }
+  @keyframes drift {
+    0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+    10%{opacity:1}
+    90%{opacity:1}
+    100%{transform:translateY(-10vh) rotate(720deg);opacity:0}
+  }
+
+  @media(max-width:768px) {
+    .nav-links a:not(.nav-cta) { display:none; }
+    .stats { gap:1rem; }
+    .stat { min-width:140px; padding:1.2rem; }
+  }
+</style>
 </head>
 <body>
-  <h1>Voice Widget Test</h1>
-  <p>The widget should appear in the corner.</p>
 
-  <script src="http://localhost:3002 /voice-widget.js"></script>
-<voice-agent
-  deployment-id="646E8D42-4290-4660-B03F-7319BC70598F"
-  api-url="http://localhost:3002 ">
-</voice-agent>
+<div class="particles" id="particles"></div>
+
+<nav>
+  <div class="logo">sidecar<span>.io</span></div>
+  <div class="nav-links">
+    <a class="active" onclick="showPage('home')">Home</a>
+    <a onclick="showPage('about')">About</a>
+    <a>Resources</a>
+    <a>Podcast</a>
+    <a class="nav-cta" onclick="showPage('home')">Get Started</a>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="home">
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span> AI Education for Associations</div>
+    <h1>Your AI Learning Journey Starts Here</h1>
+    <p>Transform your association with cutting-edge AI education. Join thousands of professionals mastering AI training and earning their AAiP Certification.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="showPage('about')">Explore Learning Hub</button>
+      <button class="btn btn-outline">Book a Demo</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><h3>50K+</h3><p>Audience Reach</p></div>
+    <div class="stat"><h3>30K+</h3><p>Subscribers</p></div>
+    <div class="stat"><h3>1,000+</h3><p>Organizations Served</p></div>
+  </div>
+
+  <section>
+    <h2 class="section-title">How We Empower Associations</h2>
+    <p class="section-sub">From individual certification to team-wide training, we have the right path for your AI journey.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🎓</div>
+        <h4>AAiP Certification</h4>
+        <p>Earn the industry-recognized AI certification designed specifically for association professionals and advance your career.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h4>AI Mastermind</h4>
+        <p>Take your AI education to the next level with hands-on, agent-building curriculum and advanced AI knowledge.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h4>Team Learning Hub</h4>
+        <p>Transform your entire association team with comprehensive AI training built for organizations of all sizes.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎙️</div>
+        <h4>Sidecar Sync Podcast</h4>
+        <p>Weekly AI insights curated for busy association professionals. Stay ahead with actionable intelligence.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Trusted by Leading Associations</h2>
+    <p class="section-sub">Hear from professionals who've transformed their organizations with Sidecar.</p>
+    <div class="testimonials">
+      <div class="testimonial">
+        <p class="quote">"If you're in the association space and want to stay ahead of the curve, this is the place to be. The insights have given me practical strategies I can apply right away."</p>
+        <div class="author">
+          <div class="avatar">DD</div>
+          <div><div class="name">Danielle Duran Baron</div><div class="role">VP, Marketing & Communications, SNA</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="quote">"Twenty-two staff members have already earned their AAiP certification. It's an essential investment in the future of our organization."</p>
+        <div class="author">
+          <div class="avatar">BM</div>
+          <div><div class="name">Bruce Moe</div><div class="role">Executive Director, MSTA</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="quote">"Partnering with Sidecar to offer educational resources has positioned us as an AI innovation leader in our industry."</p>
+        <div class="author">
+          <div class="avatar">AG</div>
+          <div><div class="name">Ann Gergen</div><div class="role">Executive Director, AGRiP</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="cta-section">
+      <h2>Ready to Transform Your Association?</h2>
+      <p>Partner with us to bring AI education to your members or get custom training for your internal team.</p>
+      <button class="btn btn-primary">Let's Talk</button>
+    </div>
+  </section>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="about">
+  <div class="about-hero">
+    <h1>About Sidecar</h1>
+    <p>We're on a mission to empower every association professional with the AI skills they need to thrive. Since our founding, we've been the bridge between cutting-edge technology and the association community.</p>
+  </div>
+
+  <section>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="icon">🚀</div>
+        <h3>Our Mission</h3>
+        <p>To democratize AI education for association professionals worldwide, giving every organization the tools to innovate, grow, and lead in the age of artificial intelligence.</p>
+      </div>
+      <div class="about-card">
+        <div class="icon">💡</div>
+        <h3>Our Vision</h3>
+        <p>A future where every association harnesses the full power of AI — enhancing member experiences, driving efficiency, and unlocking new possibilities for their communities.</p>
+      </div>
+      <div class="about-card">
+        <div class="icon">❤️</div>
+        <h3>Our Values</h3>
+        <p>Innovation, accessibility, and community. We believe AI should be approachable, practical, and impactful for professionals at every level of expertise.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Our Journey</h2>
+    <p class="section-sub">From a bold idea to the leading AI education platform for associations.</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <h4>🌱 The Beginning</h4>
+        <p>Sidecar was founded with a simple belief: association professionals deserve world-class AI education tailored to their unique challenges and opportunities.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>📚 Learning Hub Launch</h4>
+        <p>We launched the AI Learning Hub — a comprehensive platform offering courses, certifications, and resources designed specifically for the association community.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>🏆 AAiP Certification</h4>
+        <p>The Association AI Professional (AAiP) Certification became the industry standard, with thousands of professionals earning their credentials.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>🌍 1,000+ Organizations</h4>
+        <p>Today, we serve over 1,000 organizations and reach an audience of 50,000+ professionals, empowering associations across every industry.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">What Sets Us Apart</h2>
+    <p class="section-sub">We're not just another AI course — we're your long-term partner in AI transformation.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>Association-Focused</h4>
+        <p>Every piece of content is built for the unique needs of associations — no generic tech courses here.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <h4>Community-Driven</h4>
+        <p>Learn alongside 30,000+ subscribers and a vibrant community of forward-thinking association leaders.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h4>Practical & Actionable</h4>
+        <p>Hands-on training with real-world use cases you can implement immediately in your organization.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="cta-section">
+      <h2>Join the AI Revolution</h2>
+      <p>Whether you're just starting out or ready to go deep, we have the right path for your AI journey.</p>
+      <button class="btn btn-primary" onclick="showPage('home')">Get Started Today</button>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('about')">About</a>
+    <a>Learning Hub</a>
+    <a>Podcast</a>
+    <a>Events</a>
+    <a>Contact</a>
+    <a>Privacy Policy</a>
+  </div>
+  <p>© 2026 Sidecar. All rights reserved.</p>
+</footer>
+
+<script>
+  // Page navigation
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-links a:not(.nav-cta)').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.nav-links a:not(.nav-cta)').forEach(a => {
+      if (a.getAttribute('onclick') === `showPage('${id}')`) a.classList.add('active');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Floating particles
+  const pc = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const s = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width:${s}px; height:${s}px;
+      left:${Math.random()*100}%;
+      animation-duration:${Math.random()*20+15}s;
+      animation-delay:${Math.random()*10}s;
+      background:${Math.random()>0.5 ? 'rgba(108,60,225,0.2)' : 'rgba(255,107,53,0.12)'};
+    `;
+    pc.appendChild(p);
+  }
+
+  // Intersection observer for scroll animations
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }});
+  }, { threshold:0.1 });
+  document.querySelectorAll('.card,.stat,.testimonial,.about-card,.timeline-item').forEach(el => {
+    el.style.opacity = '0'; el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    obs.observe(el);
+  });
+</script>
 </body>
 </html>
