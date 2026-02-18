@@ -230,6 +230,86 @@
   .timeline-item h4 { font-weight:700; font-size:1.05rem; margin-bottom:0.4rem; }
   .timeline-item p { font-size:0.88rem; opacity:0.6; line-height:1.6; }
 
+  /* CHECKOUT PAGE */
+  .checkout-hero {
+    min-height:40vh; display:flex; flex-direction:column; justify-content:center;
+    align-items:center; text-align:center; padding:10rem 2rem 3rem; position:relative;
+  }
+  .checkout-hero::before {
+    content:''; position:absolute; top:-20%; left:30%;
+    width:600px; height:600px; border-radius:50%;
+    background:radial-gradient(circle, rgba(108,60,225,0.25) 0%, transparent 70%);
+    filter:blur(80px); pointer-events:none;
+  }
+  .checkout-hero h1 {
+    font-size:clamp(2rem,4vw,3rem); font-weight:900; margin-bottom:1rem;
+    background:linear-gradient(135deg,#fff,var(--accent));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .checkout-hero p { max-width:550px; opacity:0.7; line-height:1.7; font-size:1rem; }
+
+  .checkout-container {
+    display:grid; grid-template-columns:1fr 1fr; gap:2.5rem;
+    max-width:900px; margin:0 auto; padding:0 2rem 4rem;
+  }
+  @media(max-width:768px) { .checkout-container { grid-template-columns:1fr; } }
+
+  .checkout-product {
+    background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:24px; padding:2.5rem; display:flex; flex-direction:column; gap:1.2rem;
+  }
+  .checkout-product .product-badge {
+    display:inline-flex; align-items:center; gap:0.4rem;
+    padding:0.35rem 0.9rem; border-radius:50px;
+    background:linear-gradient(135deg,rgba(108,60,225,0.25),rgba(255,107,53,0.15));
+    font-size:0.75rem; font-weight:600; width:fit-content; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .checkout-product h2 {
+    font-size:1.6rem; font-weight:800;
+  }
+  .checkout-product .product-desc {
+    font-size:0.9rem; opacity:0.65; line-height:1.7;
+  }
+  .checkout-product .product-price {
+    font-size:2.2rem; font-weight:900;
+    background:linear-gradient(135deg,var(--accent),var(--primary));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .checkout-product .product-features {
+    list-style:none; padding:0; display:flex; flex-direction:column; gap:0.6rem;
+  }
+  .checkout-product .product-features li {
+    font-size:0.85rem; opacity:0.7; display:flex; align-items:center; gap:0.5rem;
+  }
+  .checkout-product .product-features li::before {
+    content:'✓'; color:var(--accent); font-weight:700;
+  }
+
+  .checkout-form {
+    background:var(--glass); border:1px solid var(--glass-border);
+    border-radius:24px; padding:2.5rem; display:flex; flex-direction:column; gap:1.2rem;
+  }
+  .checkout-form h3 { font-size:1.2rem; font-weight:700; margin-bottom:0.5rem; }
+  .checkout-form .form-group { display:flex; flex-direction:column; gap:0.4rem; }
+  .checkout-form label { font-size:0.8rem; font-weight:600; opacity:0.7; }
+  .checkout-form input {
+    padding:0.75rem 1rem; border-radius:12px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.05); color:#fff; font-size:0.9rem;
+    font-family:'Inter',sans-serif; outline:none; transition:border-color 0.3s;
+  }
+  .checkout-form input:focus { border-color:var(--primary); }
+  .checkout-form .btn-checkout {
+    margin-top:0.5rem; padding:1rem; border-radius:14px; border:none;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:#fff; font-size:1rem; font-weight:700; cursor:pointer;
+    transition:all 0.3s; font-family:'Inter',sans-serif;
+  }
+  .checkout-form .btn-checkout:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(108,60,225,0.4); }
+  .checkout-form .secure-note {
+    display:flex; align-items:center; gap:0.5rem;
+    font-size:0.75rem; opacity:0.45; justify-content:center;
+  }
+
   /* FOOTER */
   footer {
     padding:3rem 2rem; text-align:center;
@@ -272,6 +352,7 @@
     <a onclick="showPage('about')">About</a>
     <a>Resources</a>
     <a>Podcast</a>
+    <a onclick="showPage('checkout')">Checkout</a>
     <a class="nav-cta" onclick="showPage('home')">Get Started</a>
   </div>
 </nav>
@@ -439,6 +520,57 @@
   </section>
 </div>
 
+<!-- CHECKOUT PAGE -->
+<div class="page" id="checkout">
+  <div class="checkout-hero">
+    <h1 id="checkout-title">Complete Your Purchase</h1>
+    <p id="checkout-subtitle">You're one step away from transforming your association's AI journey.</p>
+  </div>
+
+  <div class="checkout-container">
+    <div class="checkout-product">
+      <div class="product-badge">Most Popular</div>
+      <h2 id="checkout-product-name">AAiP Certification</h2>
+      <p class="product-desc" id="checkout-product-desc">Earn the industry-recognized Association AI Professional certification. Includes full course access, exam, and digital credential.</p>
+      <div class="product-price" id="checkout-product-price">$497</div>
+      <ul class="product-features" id="checkout-product-features">
+        <li>Full self-paced curriculum</li>
+        <li>Official AAiP exam &amp; credential</li>
+        <li>1 year of community access</li>
+        <li>Certificate of completion</li>
+      </ul>
+    </div>
+
+    <div class="checkout-form">
+      <h3>Payment Details</h3>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Jane Smith" />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="jane@association.org" />
+      </div>
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" placeholder="4242 4242 4242 4242" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>Expiry</label>
+          <input type="text" placeholder="MM / YY" />
+        </div>
+        <div class="form-group">
+          <label>CVC</label>
+          <input type="text" placeholder="123" />
+        </div>
+      </div>
+      <button class="btn-checkout" onclick="handleCheckoutSubmit()">Pay Now</button>
+      <div class="secure-note">🔒 Secured with 256-bit SSL encryption</div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="footer-links">
     <a onclick="showPage('home')">Home</a>
@@ -452,15 +584,14 @@
   <p>© 2026 Sidecar. All rights reserved.</p>
 </footer>
 
-<!-- Test Page - Voice Agent Widget -->
+  <!-- Test Page - Voice Agent Widget -->
 <script src="https://public.cdp-stage.bluecypress.io/voice-widget.js"></script>
 <voice-agent
   deployment-id="3A8DBF43-A3E2-4637-8945-7D136E470A47"
   api-url="https://public.cdp-stage.bluecypress.io">
 </voice-agent>
-<script>
 
-  
+<script>
   // Page navigation
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -497,6 +628,95 @@
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     obs.observe(el);
   });
+
+  // ========================================
+  // Voice Client Tool Handlers
+  // ========================================
+
+  // Debug: log all voice-tool events to discover DriverClass values
+  (function() {
+    var origDispatch = document.dispatchEvent.bind(document);
+    document.dispatchEvent = function(event) {
+      if (event.type && event.type.startsWith('voice-tool:')) {
+        console.log('[Voice Tool Event]', event.type, event.detail);
+      }
+      return origDispatch(event);
+    };
+  })();
+
+  // Navigate tool — internal pages + external URLs
+  document.addEventListener('voice-tool:navigate', function(e) {
+    var params = e.detail.params;
+    var responseEvent = e.detail.responseEvent;
+    var url = params.url || params.URL;
+    var page = params.page || null;
+    var title = params.title || params.name || params.linkTitle || null;
+
+    if (page && document.getElementById(page)) {
+      showPage(page);
+    } else if (url) {
+      window.open(url, '_blank');
+    }
+
+    var displayTitle = title || (page ? page.charAt(0).toUpperCase() + page.slice(1) : 'Open Link');
+    document.dispatchEvent(new CustomEvent(responseEvent, {
+      detail: {
+        success: true,
+        data: { navigatedTo: page || url },
+        showLink: true,
+        linkUrl: url || '#' + (page || ''),
+        linkTitle: displayTitle
+      }
+    }));
+  });
+
+  // Purchase tool — populates checkout page and navigates to it
+  document.addEventListener('voice-tool:startPurchase', function(e) {
+    var params = e.detail.params;
+    var responseEvent = e.detail.responseEvent;
+    var productName = params.product || params.productName || 'Product';
+    var productDesc = params.description || params.productDescription || '';
+    var checkoutUrl = params.checkout || params.checkoutUrl || '#';
+    var price = params.price || '';
+
+    // Populate checkout page with product info
+    populateCheckout({ name: productName, description: productDesc, price: price, checkoutUrl: checkoutUrl });
+
+    // Navigate to the checkout page
+    showPage('checkout');
+
+    document.dispatchEvent(new CustomEvent(responseEvent, {
+      detail: {
+        success: true,
+        data: { navigatedTo: 'checkout', product: productName },
+        showPurchase: true,
+        productName: productName,
+        productDescription: productDesc,
+        checkoutUrl: checkoutUrl
+      }
+    }));
+  });
+
+  // Populate the checkout page with product details
+  function populateCheckout(product) {
+    if (product.name) {
+      document.getElementById('checkout-product-name').textContent = product.name;
+      document.getElementById('checkout-title').textContent = 'Get ' + product.name;
+    }
+    if (product.description) {
+      document.getElementById('checkout-product-desc').textContent = product.description;
+    }
+    if (product.price) {
+      document.getElementById('checkout-product-price').textContent = product.price;
+    }
+  }
+
+  // Handle checkout form submission (demo)
+  function handleCheckoutSubmit() {
+    alert('Thank you for your purchase! (This is a demo checkout page)');
+  }
+
+  console.log('[test-widget] Client tool handlers registered: navigate, startPurchase');
 
 </script>
 </body>
