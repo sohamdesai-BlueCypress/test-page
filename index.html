@@ -585,10 +585,10 @@
 </footer>
 
   <!-- Test Page - Voice Agent Widget -->
-<script src="https://public.cdp-stage.bluecypress.io/voice-widget.js"></script>
+<script src="http://localhost:3002/voice-widget.js"></script>
 <voice-agent
-  deployment-id="3A8DBF43-A3E2-4637-8945-7D136E470A47"
-  api-url="https://public.cdp-stage.bluecypress.io">
+  deployment-id="4A49F6B5-2904-4776-AE7D-0C4CE5E55C98"
+  api-url="http://localhost:3002">
 </voice-agent>
 
 <script>
@@ -654,9 +654,8 @@
 
     if (page && document.getElementById(page)) {
       showPage(page);
-    } else if (url) {
-      window.open(url, '_blank');
     }
+    // External URLs are handled by the widget's iframe panel via showLink response
 
     var displayTitle = title || (page ? page.charAt(0).toUpperCase() + page.slice(1) : 'Open Link');
     document.dispatchEvent(new CustomEvent(responseEvent, {
